@@ -665,7 +665,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b86e3b3cbdcdde748a832bfa2531b289, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startGameScene: MainScene
+  startGameScene: NicholasTut
 --- !u!114 &1660360063
 MonoBehaviour:
   m_ObjectHideFlags: 0

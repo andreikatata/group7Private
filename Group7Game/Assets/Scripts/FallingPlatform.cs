@@ -26,7 +26,7 @@ public class FallingPlatform : MonoBehaviour {
     {
         yield return new WaitForSeconds(fallDelay); //wait specified number of seconds before platform falls
         rb2d.isKinematic = false;
-        GetComponent<Collider2D>().isTrigger = true;
+        //GetComponent<Collider2D>().isTrigger = true;
         yield return 0;
 
     }

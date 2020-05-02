@@ -8,6 +8,7 @@ public class Catapult : MonoBehaviour {
     private float resetTime = 0;//used to reset the catapult
     private bool hasLaunched = false;//used to check if the catapult has launched
     private bool angleCheck = false;
+    public bool isFacingLeft = false;
     // Use this for initialization
     void Start () {
 		
@@ -18,16 +19,28 @@ public class Catapult : MonoBehaviour {
     {
         if (hasLaunched == true)
         {
-            //releases the launchable object
-            if(attachedArm.transform.rotation.eulerAngles.z >= 270 && attachedArm.GetComponent<CatapultArm>().getLaunchable() != null)
+            if(!isFacingLeft)
             {
-                angleCheck = true;
+                //releases the launchable object
+                if (attachedArm.transform.rotation.eulerAngles.z >= 270 && attachedArm.GetComponent<CatapultArm>().getLaunchable() != null)
+                {
+                    angleCheck = true;
+                }
+                if (attachedArm.transform.rotation.eulerAngles.z <= 270 && attachedArm.GetComponent<CatapultArm>().getLaunchable() != null && angleCheck == true)
+                {
+                    attachedArm.GetComponent<CatapultArm>().ReleaseLaunchable(target.transform.position);
+                    angleCheck = false;
+                }
             }
-            if (attachedArm.transform.rotation.eulerAngles.z <= 270 && attachedArm.GetComponent<CatapultArm>().getLaunchable() != null && angleCheck == true)
+            else
             {
-                attachedArm.GetComponent<CatapultArm>().ReleaseLaunchable(target.transform.position);
-                angleCheck = false;
+                //releases the launchable object
+                if (attachedArm.transform.rotation.eulerAngles.z >= 90 && attachedArm.GetComponent<CatapultArm>().getLaunchable() != null)
+                {
+                    attachedArm.GetComponent<CatapultArm>().ReleaseLaunchable(target.transform.position);
+                }
             }
+            
             //resets arm after a period of time
             resetTime += Time.deltaTime;
             if (resetTime >= 1.5)
@@ -44,5 +57,10 @@ public class Catapult : MonoBehaviour {
     {
         attachedArm.GetComponent<CatapultArm>().RotateArm();
         hasLaunched = true;
+    }
+
+    public bool getIsFacingLeft()
+    {
+        return isFacingLeft;
     }
 }

@@ -22,11 +22,12 @@ public class RuneStone : DraggedObject {
         */
         if (collision.gameObject.tag == "RuneStoneSlot")
         {
-            Destroy(distanceJoint);
-            Destroy(rb);
+            
             GameObject.Find("Character").GetComponent<PlayerController>().setIsMovingStone(false);
             if (collision.gameObject.GetComponent<RuneStoneSlot>().identifier == identifier)
             {
+                Destroy(distanceJoint);
+                Destroy(rb);
                 transform.position = collision.gameObject.transform.position + new Vector3(0,0.4f,0);
                 collision.gameObject.GetComponent<RuneStoneSlot>().SetActivate(true);
             }

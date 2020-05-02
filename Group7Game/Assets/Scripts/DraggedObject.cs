@@ -13,6 +13,7 @@ public class DraggedObject : MonoBehaviour
     public bool afterFrame = false;
     private float SafetyBreak = 0;
     private bool isBreaking = false;
+    public bool isRound = false;
     // Use this for initialization
     void Start()
     {
@@ -76,7 +77,7 @@ public class DraggedObject : MonoBehaviour
             if (playerCollision == false && GameObject.Find("Character").GetComponent<PlayerController>().getIsMovingStone() == false)
             {
                 Destroy(rb);
-
+                print("wtf1");
             }
         }
         //ensures the rune stone does not break the joint when colliding with another rune stone
@@ -105,17 +106,25 @@ public class DraggedObject : MonoBehaviour
         {
             isTouchingOtherObject = false;
         }
+
+        //makes it possible for the rune stone to break the joint after falling off edge, should the player touch the rune stone with another rune stone
+        if (collision.gameObject.tag == "Launchable")
+        {
+            isTouchingOtherObject = false;
+        }
+
+
     }
     //Creates all the components necessairy for the dragging mechanic.
     public virtual void createDraggingComponents()
     {   
         rb = gameObject.AddComponent<Rigidbody2D>();
         rb.freezeRotation = true;
-        rb.mass = 0.6f;
+        rb.mass = 0.7f;
         rb.gravityScale = 1.5f;
         distanceJoint = gameObject.AddComponent<DistanceJoint2D>();
         distanceJoint.autoConfigureDistance = false;
-        distanceJoint.distance = 3.9f * transform.localScale.x;
+        distanceJoint.distance = 3.7f * transform.localScale.x;
         distanceJoint.connectedBody = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().GetRB();
     }
 
@@ -132,11 +141,16 @@ public class DraggedObject : MonoBehaviour
     public void CreateRB()
     {
         rb = gameObject.AddComponent<Rigidbody2D>();
-        rb.freezeRotation = true;
+        if(!isRound)
+        {
+            rb.freezeRotation = true;
+        }
+        
     }
 
     public void DestroyRB()
     {
+        print("wtf2");
         Destroy(rb);
     }
 

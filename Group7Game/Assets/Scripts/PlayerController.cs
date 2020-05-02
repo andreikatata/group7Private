@@ -12,13 +12,15 @@ public class PlayerController : MonoBehaviour
     private bool stoneIsToRight = false; // used to check if the stone is to the right of the player or to the left of the player
     private int checkPoint = 0; // used to check which checkpoint the player is at
     private bool isOnLadder = false; // used to check if the player is currently on the ladder
-    private bool isOnGround = false; // used to check if the player is on the ground
+    private int numGroundTouch;// used to check if the player is on the ground
     private GameObject interactable = null;//used to check which game object is currently selected for interaction
     public Animator animator; // the animator for animations
     private float SafetyBreakTime = 0; // used to prevent dragging from breaking when momentarily off the ground
     private bool isBreaking = false; // used to prevent dragging from breaking when momentarily off the ground
     private float jumpSafetyBreakTime = 0; // used to prevent the jump animation from transitioning when momentarily off the ground
     public bool isHidden = false;
+    
+    
 
     bool[] keysPressed = new bool[1024];
     // Use this for initialization
@@ -45,7 +47,7 @@ public class PlayerController : MonoBehaviour
         else animator.SetBool("isWalking", false);
 
 
-        if (isOnGround == true)
+        if (numGroundTouch > 0)
         {
             
                 animator.SetBool("isJumping", false);
@@ -71,7 +73,14 @@ public class PlayerController : MonoBehaviour
 
         animator.SetBool("isDragging", isMovingStone);
 
-        
+        if(isMovingStone == true && numGroundTouch == 0)
+        {
+            isBreaking = true;
+        }
+        else
+        {
+            isBreaking = false;
+        }
 
         if (isBreaking == true)
         {
@@ -84,14 +93,15 @@ public class PlayerController : MonoBehaviour
 
         if (SafetyBreakTime >= 0.3f)
         {
-            Destroy(interactable.GetComponent<RuneStone>().GetDJ());
-            Destroy(interactable.GetComponent<RuneStone>().GetRB());
+            Destroy(interactable.GetComponent<DraggedObject>().GetDJ());
+            Destroy(interactable.GetComponent<DraggedObject>().GetRB());
+            print("wtf3");
             isMovingStone = false;
             isBreaking = false;
             SafetyBreakTime = 0;
         }
 
-        if (isOnGround == false)
+        if (numGroundTouch == 0)
         {
             jumpSafetyBreakTime += Time.deltaTime;
         }
@@ -128,6 +138,7 @@ public class PlayerController : MonoBehaviour
         Animate();
     }
 
+    //handles key inputs to prevent bugs
     void GetKeyInputs()
     {
         if(Input.GetKey(KeyCode.A))
@@ -215,11 +226,10 @@ public class PlayerController : MonoBehaviour
             //jump
             if (keysPressed[(int)KeyCode.W])
             {
-                if (isOnGround == true && isMovingStone == false)
+                if (isMovingStone == false && numGroundTouch > 0)
                 {
                     animator.SetTrigger("takeOff");
                     rb.velocity = new Vector3(rb.velocity.x, jumpHeight, 0);
-                    isOnGround = false;
                 }
             }
             //Used to limit speed
@@ -234,7 +244,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-
+            
             if (keysPressed[(int)KeyCode.W])
             {
                 transform.position += new Vector3(0, 2.5f, 0) * Time.deltaTime;
@@ -244,12 +254,12 @@ public class PlayerController : MonoBehaviour
                 transform.position += new Vector3(0, -2.5f, 0) * Time.deltaTime;
             }
         }
-
-        if (!keysPressed[(int)KeyCode.A] && isHoldingD == false && isOnGround == true)
+        //stops player
+        if (!keysPressed[(int)KeyCode.A] && isHoldingD == false && numGroundTouch > 0)
         {
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
         }
-        if (!keysPressed[(int)KeyCode.D] && isHoldingA == false && isOnGround == true)
+        if (!keysPressed[(int)KeyCode.D] && isHoldingA == false && numGroundTouch > 0)
         {
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
         }
@@ -334,7 +344,7 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     isOnLadder = false;
-                    rb.gravityScale = 1.0f;
+                    rb.gravityScale = 1.5f;
                 }
             }
             //Interaction to fire the catapult
@@ -362,11 +372,13 @@ public class PlayerController : MonoBehaviour
             interactable = collision.gameObject;
         }
 
+        //stops player being reset when touched by dragons breath
         if (collision.gameObject.tag == "HideObject")
         {
             isHidden = true;
         }
 
+        //resets player if in contact with dragons breath
         if (collision.gameObject.tag == "DragonsBreath")
         {
             if (isHidden == false)
@@ -375,6 +387,13 @@ public class PlayerController : MonoBehaviour
                 print("reset");
             }
             print("passed");
+        }
+
+        //resets player if in contact with death objects
+        if (collision.gameObject.tag == "Death")
+        {
+                GameObject.Find("CheckPointManager").GetComponent<CheckPointManager>().resetPuzzle();
+                print("reset");
         }
     }
 
@@ -386,13 +405,13 @@ public class PlayerController : MonoBehaviour
             interactable = null;
             if (isOnLadder == true && transform.position.y > collision.transform.position.y)
             {
-                rb.gravityScale = 1.0f;
+                rb.gravityScale = 1.5f;
                 rb.velocity = new Vector3(rb.velocity.x, 5f, 0);
                 isOnLadder = false;
             }
             else if (isOnLadder == true && transform.position.y < collision.transform.position.y)
             {
-                rb.gravityScale = 1.0f;
+                rb.gravityScale = 1.5f;
                 isOnLadder = false;
             }
         }
@@ -412,20 +431,19 @@ public class PlayerController : MonoBehaviour
         //enables the player to jump again when touching the ground
         if (collision.gameObject.tag == "Ground")
         {
-            isOnGround = true;
-            isBreaking = false;
+            numGroundTouch++;
         }
         //enables the player to jump and makes the runestone the active interactable object
         if (collision.gameObject.tag == "RuneStone" && isOnLadder == false)
         {
-            isOnGround = true;
             interactable = collision.gameObject;
+            numGroundTouch++;
         }
         //enables the player to jump and makes the launchable the active interactable object
         if (collision.gameObject.tag == "Launchable" && isOnLadder == false)
         {
-            isOnGround = true;
             interactable = collision.gameObject;
+            numGroundTouch++;
         }
     }
 
@@ -437,6 +455,7 @@ public class PlayerController : MonoBehaviour
         //interactable is removed thereby stopping functionality when not touching
         if (collision.gameObject.tag == "RuneStone")
         {
+            numGroundTouch--;
             if (interactable.tag == "RuneStone" && isMovingStone == false)
             {
                 interactable = null;
@@ -445,6 +464,7 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.tag == "Launchable")
         {
+            numGroundTouch--;
             if (interactable.tag == "Launchable" && isMovingStone == false)
             {
                 interactable = null;
@@ -453,22 +473,20 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.tag == "Ground")
         {
-            isOnGround = false;
-            if (isMovingStone == true)
-            {
-                isBreaking = true;
-            }
+            numGroundTouch--;
         }
 
     }
 
+    //recreates the rigidbody
     void createRigidbody()
     {
         rb = gameObject.AddComponent<Rigidbody2D>();
         rb.mass = 1.0f;
-        rb.gravityScale = 1.0f;
+        rb.gravityScale = 1.5f;
     }
 
+    //getters/setters
     public bool getIsMovingStone()
     {
         return isMovingStone;

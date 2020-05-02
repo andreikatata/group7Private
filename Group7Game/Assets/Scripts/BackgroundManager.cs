@@ -7,7 +7,8 @@ public class BackgroundManager : MonoBehaviour
 
     public List<GameObject> backgrounds;
     public List<GameObject> currentBackgrounds;
-    private GameObject character;
+    private GameObject characterCam;
+    
     public List<Vector3> origonalPositions;
     private float origonalX;
     private float BackgroundDistance;
@@ -19,9 +20,10 @@ public class BackgroundManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        BackgroundDistance = (xPixels / 100.0f) * 1.5f;
-        character = GameObject.Find("Character");
-        origonalX = character.transform.position.x;
+        GameObject character = GameObject.Find("Character");
+        BackgroundDistance = (xPixels / 100.0f) * backgroundScale;
+        characterCam = GameObject.Find("Main Camera");
+        origonalX = characterCam.transform.position.x;
         Vector3 characterPos = character.transform.position - new Vector3((BackgroundDistance * 2), 0, 0);
         Quaternion characterRot = character.transform.rotation;
         for (int i = 0; i < 5; i++)
@@ -39,7 +41,7 @@ public class BackgroundManager : MonoBehaviour
     void Update()
     {
         //creates a new background if background is needed on the right side of the screen
-        if (character.transform.position.x >= currentBackgrounds[currentBackgrounds.Count - 1].transform.position.x - BackgroundDistance)
+        if (characterCam.transform.position.x >= currentBackgrounds[currentBackgrounds.Count - 1].transform.position.x - BackgroundDistance)
         {
             Vector3 backgroundPos = currentBackgrounds[currentBackgrounds.Count - 1].transform.position + new Vector3(BackgroundDistance, 0, 10);
             Quaternion backgroundRot = currentBackgrounds[currentBackgrounds.Count - 1].transform.rotation;
@@ -49,7 +51,7 @@ public class BackgroundManager : MonoBehaviour
         }
 
         //create a new background if background is needed on the left side of the screen
-        if (character.transform.position.x <= currentBackgrounds[0].transform.position.x + BackgroundDistance)
+        if (characterCam.transform.position.x <= currentBackgrounds[0].transform.position.x + BackgroundDistance)
         {
             Vector3 backgroundPos = currentBackgrounds[0].transform.position + new Vector3(-BackgroundDistance, 0, 0);
             Quaternion backgroundRot = currentBackgrounds[0].transform.rotation;
@@ -61,7 +63,7 @@ public class BackgroundManager : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        currentBackgrounds[0].transform.position = origonalPositions[0] + new Vector3(origonalX - (character.transform.position.x / followXRate), yOffset + character.transform.position.y / followYRate, 0);
+        currentBackgrounds[0].transform.position = origonalPositions[0] + new Vector3(origonalX + (characterCam.transform.position.x / followXRate), yOffset + characterCam.transform.position.y / followYRate, 0);
         for (int i = 0; i < currentBackgrounds.Count; i++)
 
         {

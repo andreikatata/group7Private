@@ -5,6 +5,7 @@ using UnityEngine;
 public class Barrier : MonoBehaviour {
     public List<GameObject> RuneStoneSlots;
     public bool isBreakable = false;
+    [SerializeField] private GameObject trigger;
     // Use this for initialization
     void Start () {
     }
@@ -25,6 +26,14 @@ public class Barrier : MonoBehaviour {
             }
 
             if (complete == RuneStoneSlots.Count)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+
+        if(trigger != null)
+        {
+            if(trigger.GetComponent<Trigger>().GetIsTriggered())
             {
                 gameObject.SetActive(false);
             }

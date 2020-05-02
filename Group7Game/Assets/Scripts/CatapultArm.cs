@@ -5,6 +5,7 @@ using UnityEngine;
 public class CatapultArm : MonoBehaviour {
     JointMotor2D MotorRef;
     private GameObject launchable;
+    public GameObject catapult;
 	// Use this for initialization
 	void Start () {
         MotorRef = GetComponent<HingeJoint2D>().motor;
@@ -17,14 +18,32 @@ public class CatapultArm : MonoBehaviour {
 
     public void RotateArm()
     {
-        MotorRef.motorSpeed = 400;
-        GetComponent<HingeJoint2D>().motor = MotorRef;
+        if (catapult.GetComponent<Catapult>().getIsFacingLeft() == false)
+        {
+            MotorRef.motorSpeed = 400;
+            GetComponent<HingeJoint2D>().motor = MotorRef;
+        }
+        else
+        {
+            MotorRef.motorSpeed = -400;
+            GetComponent<HingeJoint2D>().motor = MotorRef;
+        }
+        
     }
 
     public void ResetArm()
     {
-        MotorRef.motorSpeed = -50;
-        GetComponent<HingeJoint2D>().motor = MotorRef;
+        if (catapult.GetComponent<Catapult>().getIsFacingLeft() == false)
+        {
+            MotorRef.motorSpeed = -50;
+            GetComponent<HingeJoint2D>().motor = MotorRef;
+        }
+        else
+        {
+            MotorRef.motorSpeed = 50;
+            GetComponent<HingeJoint2D>().motor = MotorRef;
+        }
+        
     }
 
     public void StoreLaunchable(GameObject launchableRef)

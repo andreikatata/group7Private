@@ -20,6 +20,8 @@ TagManager:
   - HideObject
   - Bed
   - Bookshelf
+  - Trigger
+  - Death
   layers:
   - Default
   - TransparentFX
@@ -62,4 +64,22 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: foreground
+    uniqueID: 3394310843
+    locked: 0
+  - name: fern1
+    uniqueID: 1965580359
+    locked: 0
+  - name: water
+    uniqueID: 4179897151
+    locked: 0
+  - name: fernBetweenWater and FG
+    uniqueID: 729592193
+    locked: 0
+  - name: GrassFG
+    uniqueID: 142423611
+    locked: 0
+  - name: FernFG
+    uniqueID: 2851603247
     locked: 0

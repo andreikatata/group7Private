@@ -16,7 +16,7 @@ public class Launchable : DraggedObject {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "CatapultArm" && collision.GetComponent<CatapultArm>().getLaunchable() == null && isFiring == false)
+        if (collision.tag == "CatapultArm" && collision.GetComponent<CatapultArm>().getLaunchable() == null && collision.GetComponent<CatapultArm>().catapult.GetComponent<Catapult>().getIsFacingLeft() == false && isFiring == false)
         {
             if (GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().getIsMovingStone() == true)
             {
@@ -25,6 +25,20 @@ public class Launchable : DraggedObject {
                 GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().setInteractable(null);
             }
             transform.position = collision.transform.position - new Vector3(1.2f, -0.5f, 0);
+            AttachLaunchable(collision);
+            gameObject.GetComponent<CircleCollider2D>().enabled = false;
+            collision.GetComponent<CatapultArm>().StoreLaunchable(gameObject);
+            GetComponent<SpriteRenderer>().sortingOrder = -3;
+        }
+        else if (collision.tag == "CatapultArm" && collision.GetComponent<CatapultArm>().getLaunchable() == null && collision.GetComponent<CatapultArm>().catapult.GetComponent<Catapult>().getIsFacingLeft() == true && isFiring == false)
+        {
+            if (GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().getIsMovingStone() == true)
+            {
+                Destroy(distanceJoint);
+                GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().setIsMovingStone(false);
+                GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().setInteractable(null);
+            }
+            transform.position = collision.transform.position - new Vector3(-1.2f, -0.5f, 0);
             AttachLaunchable(collision);
             gameObject.GetComponent<CircleCollider2D>().enabled = false;
             collision.GetComponent<CatapultArm>().StoreLaunchable(gameObject);
@@ -40,6 +54,7 @@ public class Launchable : DraggedObject {
         {
             if (isFiring == true)
             {
+                
                 collision.gameObject.SetActive(false);
             }
         }
@@ -75,6 +90,7 @@ public class Launchable : DraggedObject {
         Vector3 launchVector;
         launchVector = target - transform.position;
         rb.velocity = launchVector;
+        rb.freezeRotation = false;
     }
 
     public bool getIsFiring()

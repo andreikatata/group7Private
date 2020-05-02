@@ -21,10 +21,10 @@ GameObject:
   - component: {fileID: 4830504850188370}
   - component: {fileID: 212831101617950524}
   - component: {fileID: 61956120608509418}
-  - component: {fileID: 114631040567859908}
+  - component: {fileID: 114188382991996556}
   m_Layer: 0
   m_Name: Rotating_Platform_Placeholder
-  m_TagString: Untagged
+  m_TagString: RotatingPlatform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -36,8 +36,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1209728537723794}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 73.45209, y: 7.526083, z: 0.51058364}
-  m_LocalScale: {x: 0.34063673, y: 0.16429897, z: 1}
+  m_LocalPosition: {x: 69.46685, y: 11.052827, z: 0.51058364}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -51,35 +51,35 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.075984, y: 0.000007867813}
+  m_Offset: {x: -0.17697144, y: -0.18396187}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 21, y: 15}
+    oldSize: {x: 16.86, y: 3.81}
     newSize: {x: 21, y: 15}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 12.0361595, y: 4.316192}
+  m_Size: {x: 10.518402, y: 1.1886368}
   m_EdgeRadius: 0
---- !u!114 &114631040567859908
+--- !u!114 &114188382991996556
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1209728537723794}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a2f10e5be47e854dbf64d901ddeef05, type: 3}
+  m_Script: {fileID: 11500000, guid: 7cbd549a0c9359b4fb51fd8e16ab1bb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotatingPlatforms:
-  - {fileID: 0}
+  checkPoint: 0
+  speed: 100
 --- !u!212 &212831101617950524
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -115,7 +115,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 96db928f8ac7948499d2a2e57b1c39d6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5b08f9911b906f34b9031598a633596c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

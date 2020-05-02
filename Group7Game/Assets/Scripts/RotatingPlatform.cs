@@ -25,7 +25,7 @@ public class RotatingPlatform : MonoBehaviour
             //Set a rate at which platform should turn
             float turnSpeed = speed * Time.deltaTime;
             //Connect turning rate to horizonal motion for smooth transition
-            float rotate = Input.GetAxis("RotatePlatform") * turnSpeed;
+            float rotate = Input.GetAxis("RotatePlatform") * -turnSpeed;
             //Get current rotation
             gameObject.transform.Rotate(Vector3.forward * rotate);
         }
